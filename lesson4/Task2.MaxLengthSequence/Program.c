@@ -73,7 +73,7 @@ int ReadMap(int m[][10])
 				continue;
 			}
 		}
-		
+
 		return 1;
 	}
 }
@@ -107,7 +107,7 @@ void FindNumbersWays(int m[][10], int x, int y)
 			{
 				continue;
 			}
-			else if(m[i][j] == 0)
+			else if (m[i][j] == 0)
 			{
 				res[i][j] = 0;
 			}
@@ -115,7 +115,7 @@ void FindNumbersWays(int m[][10], int x, int y)
 			{
 				res[i][j] = res[i][j - 1];
 			}
-			else if(j == 0)
+			else if (j == 0)
 			{
 				res[i][j] = res[i - 1][j];
 			}
