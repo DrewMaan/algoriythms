@@ -1,130 +1,63 @@
 #include <stdio.h>
-#include <ctype.h>
-
-int ReadMap(int[][10]);
-void PrintMap(int[][10]);
-void FindNumbersWays(int[][10], int, int);
+#include <string.h>
+#include <malloc.h>
 
 int main()
 {
-	int map[10][10] = { 0 };
-	int startX, startY;
-	int start;
+	int max = 0;
+	char str1[30] = { 0 };
+	char str2[30] = { 0 };
 
-	if (!ReadMap(map))
-		return 0;
-	PrintMap(map);
+	printf("Eneter first sequence: ");
+	scanf("%s", &str1);
+	printf("Eneter second sequence: ")
+	scanf("%s", &str2);
 
-	printf("Введите точку старта: ");
+	int n = strlen(str1) + 1;
+	int m = strlen(str2) + 1;
 
-	do
+	int** a;
+
+	a = (int**)malloc(n * sizeof(int*));
+	for (int i = 0; i < n; i++)
 	{
-		scanf_s("%d %d", &startX, &startY);
-		if (startX <= 0 && startX > 10 && startY <= 0 && startY > 10)
+		a[i] = (int*)malloc(m * sizeof(int));
+		for (int j = 0; j < m; j++)
 		{
-			start = 0;
+			a[i][j] = 0;
 		}
-		else
-		{
-			start = map[startX - 1][startY - 1];
-		}
-
-		if (start == 0)
-		{
-			printf("Выберите другую точку старта: ");
-		}
-	} while (start == 0);
-
-	FindNumbersWays(map, startX - 1, startY - 1);
-
-	return 0;
-}
-
-int ReadMap(int m[][10])
-{
-	FILE* f;
-	fopen_s(&f, "map.txt", "r+");
-
-	if (f == NULL)
-	{
-		printf("Не удалось открыть файл\n");
-		return 0;
 	}
-	else
+
+	for (int i = 1; i < n; i++)
 	{
-		int i = 0;
-		int j = 0;
-		while (!feof(f))
+		for (int j = 1; j < m; j++)
 		{
-			char c;
-			fscanf_s(f, "%c", &c);
-			if (isdigit(c))
+			if (str1[i - 1] == str2[j - 1])
 			{
-				m[i][j] = (int)c - (int)'0';
-				j++;
-			}
-			else if (c == '\n')
-			{
-				i++;
-				j = 0;
+				a[i][j] = a[i - 1][j - 1] + 1;
+				if (a[i][j] > max)
+					max = a[i][j];
 			}
 			else
 			{
-				continue;
+				if (a[i - 1][j] >= a[i][j - 1])
+					a[i][j] = a[i - 1][j];
+				else
+					a[i][j] = a[i][j - 1];
 			}
 		}
-
-		return 1;
 	}
-}
 
-void PrintMap(int m[][10])
-{
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < n; i++)
 	{
-		for (int j = 0; j < 10; j++)
+		for (int j = 0; j < m; j++)
 		{
-			printf("%d   ", m[i][j]);
+			printf("%d ", a[i][j]);
 		}
 		printf("\n");
 	}
-	printf("\n\n");
-}
 
-void FindNumbersWays(int m[][10], int x, int y)
-{
-	int res[10][10] = { 0 };
-	int i = x;
-	int j = y;
+	printf("Max subsequence: %d\n", max);
 
-	res[i][j] = 1;
-
-	for (i = 0; i < 10; i++)
-	{
-		for (j = 0; j < 10; j++)
-		{
-			if ((i == 0 && j == 0) || (i == x && j == y))
-			{
-				continue;
-			}
-			else if (m[i][j] == 0)
-			{
-				res[i][j] = 0;
-			}
-			else if (i == 0)
-			{
-				res[i][j] = res[i][j - 1];
-			}
-			else if (j == 0)
-			{
-				res[i][j] = res[i - 1][j];
-			}
-			else
-			{
-				res[i][j] = res[i - 1][j] + res[i][j - 1];
-			}
-		}
-	}
-
-	PrintMap(res);
+	return 0;
 }
